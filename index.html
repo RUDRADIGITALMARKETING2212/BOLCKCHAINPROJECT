@@ -221,8 +221,17 @@ button:hover {
 
   <!-- Floating AI Icon -->
   <div class="ai-wrapper" id="aiWrapper">
-    <img src="ai.jpg" id="aiIcon" alt="AI Icon" />
-    <div class="ai-label">AI Assistant</div>
+    <div class="ai-container" onclick="openAIPage()">
+  <img src="ai.jpg" id="aiIcon" alt="AI Icon" />
+  <div class="ai-label">AI Assistant</div>
+</div>
+
+<script>
+function openAIPage() {
+  window.location.href = 'ai.html';
+}
+</script>
+
   </div>
 
   <script>
@@ -254,3 +263,4 @@ button:hover {
   </script>
 </body>
 </html>
+
