@@ -1,256 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🌟 PROJET | Anand Shukla</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<title>🌿 Carbon Footprint AI Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
-}
-
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  overflow: hidden;
-  background: #000;
-  padding: 10px;
-}
-
-/* Video Background */
-#bgVideo {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -1;
-  filter: brightness(0.6);
-}
-
-/* Login Container */
-.container {
-  width: 380px;
-  max-width: 95%;
-  padding: 40px 30px;
-  background: rgba(255, 234, 7, 0.1);
-  border-radius: 20px;
-  backdrop-filter: blur(20px);
-  box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
-  text-align: center;
-  color: #fff;
-  transform: perspective(800px) rotateY(5deg) rotateX(2deg);
-  transition: transform 0.5s ease;
-  z-index: 1;
-}
-
-.container:hover {
-  transform: perspective(800px) rotateY(0deg) rotateX(0deg);
-}
-
-h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  letter-spacing: 1px;
-  text-shadow: 0 0 15px #00ffe5;
-}
-
-.input-box {
-  position: relative;
-  margin: 20px 0;
-}
-
-.input-box input {
-  width: 100%;
-  padding: 15px 45px 15px 15px;
-  border: none;
-  outline: none;
-  border-radius: 10px;
-  font-size: 15px;
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.2);
-  transition: 0.3s ease;
-}
-
-.input-box input:focus {
-  box-shadow: 0 0 10px #00ffe5, 0 0 20px #00ffe5;
-}
-
-.input-box label {
-  position: absolute;
-  top: 50%;
-  left: 15px;
-  transform: translateY(-50%);
-  font-size: 14px;
-  color: #fff;
-  pointer-events: none;
-  transition: 0.3s;
-}
-
-.input-box input:focus ~ label,
-.input-box input:valid ~ label {
-  top: -8px;
-  font-size: 12px;
-  color: #00ffe5;
-}
-
-.input-box .toggle-password {
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: 18px;
-  color: #fff;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 15px;
-  background: #00ffe5;
-  color: #000;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.3s ease;
-  box-shadow: 0 0 15px #00ffe5;
-}
-
-button:hover {
-  background: #00bfae;
-  box-shadow: 0 0 25px #00ffe5, 0 0 40px #00ffe5;
-  transform: scale(1.05);
-}
-
-.error {
-  color: #ff6b6b;
-  font-size: 14px;
-  margin-top: 5px;
-  display: none;
-}
-
-/* Floating AI Icon */
-.ai-wrapper {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  text-align: center;
-  z-index: 1000;
-  cursor: pointer;
-}
-
-#aiIcon {
-  width: 50px;
-  height: 50px;
-  animation: float 3s ease-in-out infinite;
-  transition: transform 0.3s ease;
-}
-
-#aiIcon:hover {
-  transform: scale(1.2);
-}
-
-.ai-label {
-  color: #00ffe5;
-  font-weight: bold;
-  margin-top: 5px;
-  text-shadow: 0 0 5px #00ffe5;
-  font-size: 12px;
-}
-
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0px); }
-}
-
-/* Mobile adjustments */
-@media screen and (max-width: 450px) {
-  .container {
-    width: 90%;
-    padding: 25px 20px;
-    transform: perspective(600px) rotateY(0deg) rotateX(0deg);
-  }
-  h1 { font-size: 22px; }
-  #aiIcon { width: 40px; height: 40px; }
-  .ai-label { font-size: 11px; }
-  .input-box input { padding: 12px 40px 12px 12px; font-size: 14px; }
-  button { font-size: 14px; padding: 10px; }
-}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+body { background: linear-gradient(135deg, #4CAF50, #1E88E5); min-height:100vh; display:flex; justify-content:center; align-items:center; padding:15px; }
+.assistant-container { background:#fff; width:100%; max-width:450px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.2); overflow:hidden; display:flex; flex-direction:column; height:90vh; }
+.assistant-header { background-color:#1E88E5; padding:15px; color:white; font-size:18px; text-align:center; font-weight:600; }
+.chat-box { flex:1; overflow-y:auto; padding:15px; background:#f9f9f9; }
+.msg { margin-bottom:12px; padding:10px 14px; border-radius:10px; max-width:80%; word-wrap:break-word; animation:fadeIn 0.3s ease-in-out; }
+.user-msg { background-color:#1E88E5; color:white; margin-left:auto; }
+.bot-msg { background-color:#e3f2fd; color:#222; margin-right:auto; }
+.suggestion-box { display:flex; flex-wrap:wrap; gap:6px; padding:10px; border-top:1px solid #eee; background:#fafafa; }
+.suggestion { background-color:#e3f2fd; color:#1E88E5; padding:6px 12px; border-radius:15px; font-size:13px; cursor:pointer; transition:0.2s; }
+.suggestion:hover { background-color:#bbdefb; }
+@keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
+@media (max-width:500px){ .assistant-container{ height:95vh; } }
 </style>
 </head>
 <body>
-  <!-- Video Background -->
-  <video autoplay muted loop playsinline id="bgVideo">
-    <source src="istockphoto-2200646902-640_adpp_is.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+<div class="assistant-container">
+  <div class="assistant-header">🌿 Carbon Footprint AI Assistant</div>
 
-  <!-- Login Container -->
-  <div class="container">
-    <h1>🌟 Welcome Back</h1>
-    <form id="loginForm">
-      <div class="input-box">
-        <input type="text" id="name" required />
-        <label for="name">Full Name</label>
-      </div>
-      <div class="input-box">
-        <input type="email" id="email" required />
-        <label for="email">Email</label>
-      </div>
-      <div class="input-box">
-        <input type="password" id="password" required />
-        <label for="password">Password</label>
-        <span class="toggle-password" onclick="togglePassword()">👁️</span>
-      </div>
-      <p class="error" id="errorMsg">Please enter valid credentials!</p>
-      <button type="submit">Login to Ecotrack</button>
-    </form>
+  <div class="chat-box" id="chat-box">
+    <div class="bot-msg msg">👋 Hello! I'm your Carbon Footprint AI Assistant. Click the first question below to start.</div>
   </div>
 
-  <!-- Floating AI Icon -->
-  <div class="ai-wrapper" id="aiWrapper">
-    <img src="ai.jpg" id="aiIcon" alt="AI Icon" />
-    <div class="ai-label">AI Assistant</div>
-  </div>
+  <div class="suggestion-box" id="suggestion-box"></div>
+</div>
 
-  <script>
-    const loginForm = document.getElementById("loginForm");
-    const errorMsg = document.getElementById("errorMsg");
-    const nameInput = document.getElementById("name");
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const aiWrapper = document.getElementById("aiWrapper");
+<script>
+const chatBox = document.getElementById("chat-box");
+const suggestionBox = document.getElementById("suggestion-box");
 
-    loginForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-      if (emailInput.value && passwordInput.value && nameInput.value) {
-        localStorage.setItem("userName", nameInput.value);
-        localStorage.setItem("userEmail", emailInput.value);
-        window.location.href = "main.html";
-      } else {
-        errorMsg.style.display = "block";
-      }
-    });
+const questions = [
+  {q:"What is carbon footprint?", a:"A carbon footprint is the total amount of greenhouse gases, mainly CO₂, released due to human activities like driving, electricity usage, and consumption habits."},
+  {q:"How is carbon footprint calculated?", a:"It is calculated by measuring emissions from activities such as travel, energy consumption, food habits, and product usage, often expressed in tonnes of CO₂ per year."},
+  {q:"How much CO₂ is released by driving a car?", a:"On average, a car emits about 0.25 kg of CO₂ per kilometer driven."},
+  {q:"What is the carbon footprint of charging a mobile phone?", a:"Charging a smartphone produces a very small amount of CO₂, approximately 8–10 grams per full charge."},
+  {q:"How can I reduce my carbon footprint?", a:"Use public transport, adopt renewable energy, reduce meat consumption, use energy-efficient appliances, and recycle materials."},
+  {q:"What is the average carbon footprint in India?", a:"The average carbon footprint in India is about 1.9 tonnes per person per year, much lower than the global average."},
+  {q:"Do LED bulbs reduce CO₂ emissions?", a:"Yes, LED bulbs consume less electricity, indirectly reducing CO₂ emissions from power plants."},
+  {q:"How much pollution comes from flights?", a:"A short-haul flight emits about 255g CO₂ per km per passenger, while long flights can produce more."},
+  {q:"How does solar energy reduce carbon footprint?", a:"Solar panels generate electricity without burning fossil fuels, reducing CO₂ emissions by up to 60% compared to conventional sources."},
+  {q:"How do plastic bottles affect the environment?", a:"Plastic bottles contribute to CO₂ emissions during production and disposal, and pollute oceans and landfills."},
+  {q:"What are the carbon emissions of eating meat?", a:"Producing meat generates significantly more CO₂ than plant-based foods; reducing meat intake can lower your footprint."},
+  {q:"How does recycling help?", a:"Recycling reduces the need for raw materials, saving energy and lowering CO₂ emissions."},
+  {q:"What is the effect of deforestation?", a:"Deforestation increases carbon in the atmosphere as trees no longer absorb CO₂, worsening climate change."},
+  {q:"Can using public transport reduce carbon footprint?", a:"Yes, buses and trains emit far less CO₂ per passenger than cars."},
+  {q:"How does water usage impact carbon footprint?", a:"Energy used to treat and heat water contributes to CO₂ emissions; using less water reduces your footprint."},
+  {q:"Do electric vehicles reduce emissions?", a:"Electric vehicles produce less CO₂ than conventional cars, especially if charged with renewable energy."},
+  {q:"How much CO₂ is produced by home heating?", a:"Heating a home with fossil fuels releases CO₂; switching to renewable energy reduces emissions."},
+  {q:"What is carbon offsetting?", a:"Carbon offsetting involves funding projects like tree planting to compensate for your CO₂ emissions."},
+  {q:"How can diet affect carbon footprint?", a:"Plant-based diets generally have a lower carbon footprint compared to meat-heavy diets."},
+  {q:"Do reusable bags help?", a:"Yes, using reusable bags reduces the need for plastic production, saving CO₂ emissions."},
+  {q:"How does air conditioning impact carbon footprint?", a:"AC units consume electricity, often produced by fossil fuels, increasing CO₂ emissions."},
+  {q:"What is the impact of fast fashion?", a:"Fast fashion creates high CO₂ emissions due to production, transportation, and disposal of clothes."},
+  {q:"Can planting trees help?", a:"Trees absorb CO₂ from the atmosphere, reducing overall carbon levels."},
+  {q:"How does commuting by bike affect carbon footprint?", a:"Cycling produces zero CO₂ and reduces emissions from vehicles."},
+  {q:"Does eating locally reduce emissions?", a:"Yes, local food reduces transportation-related CO₂ emissions."},
+  {q:"What is greenhouse gas?", a:"Greenhouse gases like CO₂ and methane trap heat in the atmosphere, contributing to climate change."},
+  {q:"How does meat production affect environment?", a:"Meat production emits methane, a potent greenhouse gas, and requires large land and water resources."},
+  {q:"Do wind turbines reduce CO₂?", a:"Yes, wind energy generates electricity without CO₂ emissions."},
+  {q:"How much CO₂ is produced by laptops?", a:"Using laptops consumes electricity; over their lifetime, they produce CO₂ depending on energy source."},
+  {q:"What is sustainable living?", a:"Sustainable living is adopting habits that reduce resource consumption and carbon emissions."},
+  {q:"How does food waste impact carbon footprint?", a:"Wasted food represents wasted energy and CO₂ emissions from production and transportation."},
+  {q:"Can using solar water heaters help?", a:"Yes, solar water heaters reduce reliance on electricity or gas, lowering CO₂ emissions."},
+  {q:"Do hybrid cars save emissions?", a:"Hybrid cars consume less fuel and produce lower CO₂ emissions than conventional vehicles."},
+  {q:"What is carbon neutrality?", a:"Carbon neutrality is balancing emitted CO₂ with reductions or offsets to achieve net-zero emissions."},
+  {q:"Does air travel affect climate?", a:"Yes, air travel emits large amounts of CO₂ and contrails that contribute to climate change."},
+  {q:"Can LED street lights help cities?", a:"LED street lights use less energy, reducing urban CO₂ emissions."},
+  {q:"How does urban gardening help?", a:"Urban gardening absorbs CO₂, reduces transportation needs, and promotes sustainability."},
+  {q:"Are paper straws better?", a:"Yes, paper straws reduce plastic production and associated CO₂ emissions."},
+  {q:"What is lifecycle emissions?", a:"Lifecycle emissions are all CO₂ produced from manufacturing, use, and disposal of a product."},
+  {q:"Can telecommuting reduce carbon footprint?", a:"Working from home reduces commuting emissions, lowering overall carbon footprint."},
+  {q:"How does packaging affect emissions?", a:"Excessive packaging requires energy to produce and transport, increasing CO₂ emissions."},
+  {q:"What is renewable energy?", a:"Renewable energy comes from natural sources like sun, wind, and water, producing minimal CO₂."},
+  {q:"How does carpooling help?", a:"Carpooling reduces the number of vehicles on the road, cutting CO₂ emissions per person."}
+];
 
-    function togglePassword() {
-      passwordInput.type = passwordInput.type === "password" ? "text" : "password";
-    }
 
-    aiWrapper.addEventListener("click", () => {
-      window.location.href = "ai.html";
-    });
-  </script>
+let currentQuestion = 0;
+
+// Show the next question
+function showNextQuestion() {
+  suggestionBox.innerHTML = "";
+  if(currentQuestion < questions.length) {
+    const chip = document.createElement("div");
+    chip.className = "suggestion";
+    chip.innerText = questions[currentQuestion].q;
+    chip.onclick = () => {
+      addMessage(questions[currentQuestion].q, "user");
+      setTimeout(() => {
+        addMessage(questions[currentQuestion].a, "bot");
+        currentQuestion++;
+        showNextQuestion(); // Show next question after answer
+      }, 500);
+    };
+    suggestionBox.appendChild(chip);
+  } else {
+    // All questions done
+    const doneMsg = document.createElement("div");
+    doneMsg.className = "bot-msg msg";
+    doneMsg.innerText = "✅ You have seen all the questions!";
+    chatBox.appendChild(doneMsg);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+}
+
+// Add message to chat log
+function addMessage(content, type){
+  const msg = document.createElement("div");
+  msg.className = `${type}-msg msg`;
+  msg.innerText = content;
+  chatBox.appendChild(msg);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// Start the first question
+showNextQuestion();
+</script>
 </body>
 </html>
