@@ -14,10 +14,6 @@ body { background: linear-gradient(135deg, #4CAF50, #1E88E5); min-height:100vh; 
 .msg { margin-bottom:12px; padding:10px 14px; border-radius:10px; max-width:80%; word-wrap:break-word; animation:fadeIn 0.3s ease-in-out; }
 .user-msg { background-color:#1E88E5; color:white; margin-left:auto; }
 .bot-msg { background-color:#e3f2fd; color:#222; margin-right:auto; }
-.input-area { display:flex; border-top:1px solid #ddd; padding:10px; background:#fff; }
-.input-area input { flex:1; padding:12px; border:none; border-radius:30px; background:#f0f0f0; outline:none; font-size:14px; }
-.input-area button { background-color:#1E88E5; border:none; color:white; padding:10px 15px; margin-left:8px; border-radius:50%; cursor:pointer; font-size:18px; transition:0.2s; }
-.input-area button:hover { background-color:#1565c0; }
 .suggestion-box { display:flex; flex-wrap:wrap; gap:6px; padding:10px; border-top:1px solid #eee; background:#fafafa; }
 .suggestion { background-color:#e3f2fd; color:#1E88E5; padding:6px 12px; border-radius:15px; font-size:13px; cursor:pointer; transition:0.2s; }
 .suggestion:hover { background-color:#bbdefb; }
@@ -28,18 +24,16 @@ body { background: linear-gradient(135deg, #4CAF50, #1E88E5); min-height:100vh; 
 <body>
 <div class="assistant-container">
   <div class="assistant-header">🌿 Carbon Footprint AI Assistant</div>
+
   <div class="chat-box" id="chat-box">
     <div class="bot-msg msg">👋 Hello! I'm your Carbon Footprint AI Assistant. Click the first question below to start.</div>
   </div>
+
   <div class="suggestion-box" id="suggestion-box"></div>
-  <div class="input-area">
-    <input type="text" id="user-input" placeholder="Type your question here...ANAND SHUKLA" />
-    <button onclick="sendMessage()">➤</button>
-  </div>
 </div>
+
 <script>
 const chatBox = document.getElementById("chat-box");
-const userInput = document.getElementById("user-input");
 const suggestionBox = document.getElementById("suggestion-box");
 
 const questions = [
@@ -88,19 +82,36 @@ const questions = [
   {q:"How does carpooling help?", a:"Carpooling reduces the number of vehicles on the road, cutting CO₂ emissions per person."}
 ];
 
+
 let currentQuestion = 0;
 
-function showSuggestion() {
+// Show the next question
+function showNextQuestion() {
   suggestionBox.innerHTML = "";
-  if(currentQuestion < questions.length){
+  if(currentQuestion < questions.length) {
     const chip = document.createElement("div");
     chip.className = "suggestion";
     chip.innerText = questions[currentQuestion].q;
-    chip.onclick = () => { userInput.value = questions[currentQuestion].q; sendMessage(); };
+    chip.onclick = () => {
+      addMessage(questions[currentQuestion].q, "user");
+      setTimeout(() => {
+        addMessage(questions[currentQuestion].a, "bot");
+        currentQuestion++;
+        showNextQuestion(); // Show next question after answer
+      }, 500);
+    };
     suggestionBox.appendChild(chip);
+  } else {
+    // All questions done
+    const doneMsg = document.createElement("div");
+    doneMsg.className = "bot-msg msg";
+    doneMsg.innerText = "✅ You have seen all the questions!";
+    chatBox.appendChild(doneMsg);
+    chatBox.scrollTop = chatBox.scrollHeight;
   }
 }
 
+// Add message to chat log
 function addMessage(content, type){
   const msg = document.createElement("div");
   msg.className = `${type}-msg msg`;
@@ -109,23 +120,8 @@ function addMessage(content, type){
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-function sendMessage(){
-  const text = userInput.value.trim();
-  if(text === "") return;
-
-  addMessage(text, "user");
-  userInput.value = "";
-
-  setTimeout(()=>{
-    let reply = questions[currentQuestion].a;
-    addMessage(reply, "bot");
-    currentQuestion++;
-    showSuggestion();
-  }, 800);
-}
-
-showSuggestion();
+// Start the first question
+showNextQuestion();
 </script>
 </body>
-
 </html>
