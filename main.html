@@ -1,0 +1,611 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Unique EcoTrack — Prototype</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Lucide icons -->
+  <script type="module" src="https://unpkg.com/lucide@0.264.0/dist/lucide.esm.js"></script>
+
+  <style>
+    /* small custom styles */
+    .card { background: white; border-radius: 16px; box-shadow: 0 8px 30px rgba(16,24,40,0.08); }
+    .glass { background: rgba(255,255,255,0.6); backdrop-filter: blur(6px); }
+    .animated-count { transition: all 800ms cubic-bezier(.22,.9,.3,1); }
+    .badge-glow { box-shadow: 0 6px 18px rgba(34,197,94,0.18); transform: translateY(-4px); }
+    .fade-in { animation: fadeIn .6s ease both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-sky-50 to-emerald-50 min-h-screen text-slate-700">
+
+  <!-- Header -->
+  <header class="w-full py-4 px-6 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-500 to-sky-500 flex items-center justify-center text-white font-bold">UE</div>
+      <div>
+        <div class="text-lg font-semibold">Unique EcoTrack</div>
+        <div class="text-xs text-slate-500">Prototype — UniqueTech Creators</div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <button id="dark-toggle" class="px-3 py-2 rounded-lg bg-white card hidden md:inline">Dark</button>
+      <nav id="nav" class="hidden md:flex gap-4">
+        <button data-section="dashboard" class="nav-btn px-3 py-2 rounded-md hover:bg-white">Dashboard</button>
+        <button data-section="input" class="nav-btn px-3 py-2 rounded-md hover:bg-white">Input</button>
+        <button data-section="suggestions" class="nav-btn px-3 py-2 rounded-md hover:bg-white">Suggestions</button>
+        <button data-section="rewards" class="nav-btn px-3 py-2 rounded-md hover:bg-white">Rewards</button>
+        <button data-section="market" class="nav-btn px-3 py-2 rounded-md hover:bg-white">Market Plan</button>
+        <button data-section="scan" class="nav-btn px-3 py-2 rounded-md hover:bg-white">Scan Product</button>
+        <button data-section="contact" class="nav-btn px-3 py-2 rounded-md hover:bg-white">Contact</button>
+      </nav>
+
+      <div id="auth-area" class="flex items-center gap-3">
+        <button id="login-open" class="px-3 py-2 rounded-md bg-emerald-600 text-white">Login</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="container mx-auto px-4 py-6">
+    <div id="app" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- Left column (Dashboard + Chart) -->
+      <div class="lg:col-span-2 space-y-6">
+
+        <!-- Login / Register Modal (dummy) -->
+        <div id="auth-modal" class="fixed inset-0 bg-black/40 flex items-center justify-center hidden z-30">
+          <div class="w-full max-w-md p-6 card glass">
+            <h2 class="text-2xl font-semibold mb-3">Quick Login (dummy)</h2>
+            <form id="login-form" class="space-y-3">
+              <input id="login-email" required placeholder="Email" class="w-full p-3 rounded border" />
+              <input id="login-pass" required placeholder="Password" type="password" class="w-full p-3 rounded border" />
+              <div class="flex justify-between items-center">
+                <button class="px-4 py-2 bg-emerald-600 text-white rounded" type="submit">Login</button>
+                <button id="close-auth" type="button" class="text-slate-500">Close</button>
+              </div>
+              <p class="text-xs text-slate-500 mt-2">Dummy auth: any email/password will work for demo.</p>
+            </form>
+          </div>
+        </div>
+
+        <!-- Dashboard -->
+        <section id="dashboard" class="card p-6 fade-in">
+          <div class="flex items-start justify-between">
+            <div>
+              <h3 class="text-2xl font-semibold">Your Carbon Dashboard</h3>
+              <p class="text-sm text-slate-500">Overview & progress</p>
+            </div>
+            <div class="text-right">
+              <div class="text-sm text-slate-500">Streak</div>
+              <div id="streak" class="text-xl font-bold text-emerald-600">0 days</div>
+            </div>
+          </div>
+
+          <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="p-4 card">
+              <div class="text-xs text-slate-500">This Month</div>
+              <div id="this-month" class="text-2xl font-bold animated-count">0 kg CO₂</div>
+              <div class="text-xs text-slate-400 mt-2">Use the Input tab to update</div>
+            </div>
+
+            <div class="p-4 card">
+              <div class="text-xs text-slate-500">Last Month</div>
+              <div id="last-month" class="text-2xl font-bold">0 kg CO₂</div>
+              <div class="text-xs text-slate-400 mt-2">Auto-calculated from previous input</div>
+            </div>
+
+            <div class="p-4 card">
+              <div class="text-xs text-slate-500">Points</div>
+              <div id="points" class="text-2xl font-bold text-amber-600">0</div>
+              <div class="text-xs text-slate-400 mt-2">Earn points by reducing CO₂</div>
+            </div>
+          </div>
+
+          <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+            <div class="card p-4">
+              <canvas id="breakdownChart" height="220"></canvas>
+            </div>
+
+            <div class="p-4 card">
+              <h4 class="font-semibold mb-2">Quick Tips</h4>
+              <ul id="quick-tips" class="text-sm space-y-2 text-slate-600">
+                <li>Enter your monthly usage in Input tab to see personalized suggestions.</li>
+                <li>Scan a product to view its estimated carbon footprint.</li>
+                <li>Join community challenges in future updates.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Input Form -->
+        <section id="input" class="card p-6 hidden">
+          <h3 class="text-xl font-semibold mb-3">Enter Monthly Usage</h3>
+          <form id="input-form" class="space-y-3">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <input id="electricity" placeholder="Electricity (units)" type="number" class="p-3 rounded border w-full" />
+              <input id="car-km" placeholder="Car distance (km)" type="number" class="p-3 rounded border w-full" />
+              <input id="bike-km" placeholder="Bike distance (km)" type="number" class="p-3 rounded border w-full" />
+              <input id="train-km" placeholder="Train distance (km)" type="number" class="p-3 rounded border w-full" />
+              <input id="flight-km" placeholder="Flight distance (km)" type="number" class="p-3 rounded border w-full" />
+              <input id="shopping-spend" placeholder="Shopping spend (₹)" type="number" class="p-3 rounded border w-full" />
+            </div>
+            <div class="flex gap-3 mt-3">
+              <button class="px-4 py-2 bg-emerald-600 text-white rounded" type="submit">Calculate & Save</button>
+              <button id="input-cancel" type="button" class="px-4 py-2 rounded border">Cancel</button>
+            </div>
+
+            <div id="input-result" class="mt-4 hidden">
+              <div class="text-sm text-slate-500">Calculated CO₂</div>
+              <div id="calculated" class="text-2xl font-bold mt-1">0 kg CO₂</div>
+              <div id="reduction-msg" class="text-sm text-emerald-600 mt-2"></div>
+            </div>
+          </form>
+        </section>
+
+        <!-- Suggestions -->
+        <section id="suggestions" class="card p-6 hidden">
+          <h3 class="text-xl font-semibold mb-3">Personalized Suggestions</h3>
+          <div id="suggestions-grid" class="grid md:grid-cols-3 gap-4">
+            <!-- dynamic suggestion cards go here -->
+          </div>
+        </section>
+
+        <!-- Market Plan -->
+        <section id="market" class="card p-6 hidden">
+          <h3 class="text-xl font-semibold mb-3">Market Plan & Partnerships</h3>
+          <p class="text-sm text-slate-500">How Unique EcoTrack can engage government and businesses.</p>
+
+          <div class="mt-4 grid md:grid-cols-2 gap-4">
+            <div class="p-4 card">
+              <h4 class="font-semibold">Government Engagement</h4>
+              <ul class="text-sm mt-2 text-slate-600">
+                <li>Integration with municipal sustainability programs.</li>
+                <li>Data-driven local awareness campaigns.</li>
+                <li>Potential for grants & public-private partnerships.</li>
+              </ul>
+              <div class="mt-3">
+                <button class="px-3 py-2 rounded bg-sky-600 text-white" onclick="alert('Partnership request recorded (demo)')">Apply for Partnership</button>
+              </div>
+            </div>
+
+            <div class="p-4 card">
+              <h4 class="font-semibold">Business Collaboration</h4>
+              <ul class="text-sm mt-2 text-slate-600">
+                <li>Eco product marketplace tie-ups.</li>
+                <li>Reward programs with local green stores.</li>
+                <li>CSR integrations & sustainability reporting.</li>
+              </ul>
+              <div class="mt-3">
+                <button class="px-3 py-2 rounded bg-emerald-600 text-white" onclick="alert('Business collaboration request recorded (demo)')">Apply for Collaboration</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Scan Product -->
+        <section id="scan" class="card p-6 hidden">
+          <h3 class="text-xl font-semibold mb-3">Scan Product (Demo)</h3>
+          <p class="text-sm text-slate-500">Upload an image or enter a barcode to estimate product CO₂ footprint.</p>
+
+          <div class="mt-4 flex gap-3">
+            <input id="barcode-input" placeholder="Enter barcode or product code (e.g., P1001)" class="p-3 rounded border w-full" />
+            <button id="barcode-btn" class="px-4 py-2 bg-emerald-600 text-white rounded">Lookup</button>
+          </div>
+          <div class="mt-3">
+            <input id="file-input" type="file" accept="image/*" class="text-sm" />
+          </div>
+
+          <div id="scan-result" class="mt-4 hidden p-4 card">
+            <div id="scan-product-name" class="font-semibold text-lg"></div>
+            <div id="scan-product-co2" class="text-2xl font-bold text-emerald-600 mt-2"></div>
+            <div id="scan-product-desc" class="text-sm text-slate-600 mt-2"></div>
+          </div>
+          <p class="text-xs text-slate-400 mt-3">Note: This is a demo. Scanning uses local dummy lookup for prototype.</p>
+        </section>
+
+      </div> <!-- left column -->
+
+      <!-- Right column (Rewards, Leaderboard, Contact) -->
+      <aside class="space-y-6">
+
+        <!-- Rewards & Badges -->
+        <div id="rewards" class="card p-4 hidden">
+          <h4 class="font-semibold mb-2">Your Rewards</h4>
+          <div class="space-y-3">
+            <div class="p-3 card flex items-center justify-between">
+              <div>
+                <div class="text-sm text-slate-500">Points</div>
+                <div id="side-points" class="text-xl font-bold text-amber-600">0</div>
+              </div>
+              <div>
+                <div class="text-sm text-slate-500">Badges</div>
+                <div id="badges" class="mt-1">
+                  <span class="inline-block px-2 py-1 text-xs bg-slate-100 rounded">Beginner</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-3 card">
+              <div class="text-sm text-slate-500">Leaderboard</div>
+              <ol id="leaderboard" class="mt-2 text-sm text-slate-700">
+                <!-- dynamic -->
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div id="contact" class="card p-4 hidden">
+          <h4 class="font-semibold mb-2">Contact Us</h4>
+          <form id="contact-form" class="space-y-2">
+            <input id="contact-name" placeholder="Your name" class="w-full p-2 rounded border" required />
+            <input id="contact-email" placeholder="Your email" class="w-full p-2 rounded border" required />
+            <textarea id="contact-message" placeholder="Message" rows="3" class="w-full p-2 rounded border" required></textarea>
+            <button class="px-3 py-2 bg-emerald-600 text-white rounded" type="submit">Send</button>
+            <div class="text-xs text-slate-500 mt-2">Demo: message will show a confirmation. For real email, integrate backend or email API.</div>
+          </form>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="card p-4">
+          <h5 class="font-semibold">Quick Links</h5>
+          <div class="mt-2 flex gap-2 flex-wrap">
+            <button data-section="dashboard" class="px-3 py-1 rounded bg-white">Dashboard</button>
+            <button data-section="input" class="px-3 py-1 rounded bg-white">Input</button>
+            <button data-section="scan" class="px-3 py-1 rounded bg-white">Scan</button>
+          </div>
+        </div>
+
+        <!-- Footer / Branding -->
+        <div class="text-xs text-slate-500 text-center">
+          © UniqueTech Creators – All Rights Reserved 2025 ANAND SHUKLA
+        </div>
+
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script>
+    /* -------------- App State & Helpers -------------- */
+    const state = {
+      loggedIn: false,
+      points: Number(localStorage.getItem('points') || 0),
+      streak: Number(localStorage.getItem('streak') || 0),
+      lastCO2: Number(localStorage.getItem('lastCO2') || 0),
+      lastInputDate: localStorage.getItem('lastInputDate') || null,
+      leaderboard: [
+        { name: 'User1', points: 500 },
+        { name: 'User2', points: 450 },
+        { name: 'User3', points: 400 },
+      ],
+      productDB: {
+        'P1001': { name: 'Bamboo Bottle', co2: 2.5, desc: 'Reusable bamboo bottle — low CO₂ over lifetime.' },
+        'P2001': { name: 'Solar Lamp', co2: 12, desc: 'Solar-powered lamp — offsets grid electricity.' },
+        'P3001': { name: 'Plastic Bottle', co2: 1.2, desc: 'Single-use plastic bottle — higher lifecycle footprint.' }
+      }
+    };
+
+    // Utility: animate number
+    function animateValue(el, start, end, duration = 800) {
+      const range = end - start;
+      let startTime = null;
+      function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+        el.textContent = (start + range * progress).toFixed(2) + (el.dataset.suffix || '');
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    // Simple CO2 multipliers
+    const multipliers = {
+      electricity: 0.82,
+      car: 0.2,
+      bike: 0,
+      train: 0.05,
+      flight: 0.25,
+      shopping: 0.005
+    };
+
+    /* -------------- DOM Elements -------------- */
+    const sections = ['dashboard','input','suggestions','rewards','market','scan','contact'];
+    const navBtns = document.querySelectorAll('.nav-btn');
+    const authModal = document.getElementById('auth-modal');
+    const loginOpen = document.getElementById('login-open');
+    const closeAuth = document.getElementById('close-auth');
+    const loginForm = document.getElementById('login-form');
+    const authArea = document.getElementById('auth-area');
+
+    const thisMonthEl = document.getElementById('this-month');
+    const lastMonthEl = document.getElementById('last-month');
+    const pointsEl = document.getElementById('points');
+    const sidePointsEl = document.getElementById('side-points');
+    const streakEl = document.getElementById('streak');
+    const leaderboardEl = document.getElementById('leaderboard');
+    const suggestionsGrid = document.getElementById('suggestions-grid');
+    const inputForm = document.getElementById('input-form');
+    const inputResult = document.getElementById('input-result');
+    const calculatedEl = document.getElementById('calculated');
+    const reductionMsg = document.getElementById('reduction-msg');
+
+    /* -------------- Navigation -------------- */
+    function showSection(id) {
+      sections.forEach(sec => {
+        const el = document.getElementById(sec);
+        if (!el) return;
+        if (sec === id) el.classList.remove('hidden'); else el.classList.add('hidden');
+      });
+      // small: update rewards sidebar visibility
+      document.getElementById('rewards').classList.toggle('hidden', id !== 'rewards');
+    }
+    // nav button clicks
+    navBtns.forEach(btn => btn.addEventListener('click', () => showSection(btn.dataset.section)));
+    // quick link buttons in aside
+    document.querySelectorAll('[data-section]').forEach(b => b.addEventListener('click', e => showSection(e.target.dataset.section)));
+
+    // header login open
+    loginOpen.addEventListener('click', () => authModal.classList.remove('hidden'));
+    closeAuth.addEventListener('click', () => authModal.classList.add('hidden'));
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      state.loggedIn = true;
+      authModal.classList.add('hidden');
+      loginOpen.textContent = 'My Account';
+      // show nav
+      document.getElementById('nav').classList.remove('hidden');
+      // show dashboard
+      showSection('dashboard');
+      renderUI();
+    });
+
+    // initial UI
+    function renderUI() {
+      animateValue(thisMonthEl, 0, state.lastCO2, 700);
+      document.getElementById('last-month').textContent = (state.lastCO2 || 0).toFixed(2) + ' kg CO₂';
+      pointsEl.textContent = state.points;
+      sidePointsEl.textContent = state.points;
+      streakEl.textContent = state.streak + ' days';
+      renderLeaderboard();
+      renderBadges();
+      renderSuggestions([]);
+    }
+
+    /* -------------- Chart -------------- */
+    const ctx = document.getElementById('breakdownChart').getContext('2d');
+    const breakdownChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Electricity','Car','Bike','Train','Flight','Shopping'],
+        datasets: [{
+          data: [0,0,0,0,0,0],
+          backgroundColor: ['#10B981','#06B6D4','#94A3B8','#60A5FA','#8B5CF6','#F97316']
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+
+    function updateChart(values) {
+      breakdownChart.data.datasets[0].data = values;
+      breakdownChart.update();
+    }
+
+    /* -------------- Input Form Handling -------------- */
+    inputForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const electricity = Number(document.getElementById('electricity').value) || 0;
+      const carKm = Number(document.getElementById('car-km').value) || 0;
+      const bikeKm = Number(document.getElementById('bike-km').value) || 0;
+      const trainKm = Number(document.getElementById('train-km').value) || 0;
+      const flightKm = Number(document.getElementById('flight-km').value) || 0;
+      const shoppingSpend = Number(document.getElementById('shopping-spend').value) || 0;
+
+      const values = [
+        electricity * multipliers.electricity,
+        carKm * multipliers.car,
+        bikeKm * multipliers.bike,
+        trainKm * multipliers.train,
+        flightKm * multipliers.flight,
+        shoppingSpend * multipliers.shopping
+      ];
+
+      const total = values.reduce((a,b)=>a+b,0);
+      // show result
+      inputResult.classList.remove('hidden');
+      animateValue(calculatedEl, state.lastCO2 || 0, total, 900);
+      document.getElementById('calculated').dataset.suffix = ' kg CO₂';
+      // compute reduction % from lastCO2
+      let reduction = 0;
+      if (state.lastCO2 > 0) {reductionMsg.textContent = 'This is your first entry. Points will start from next entries.';
+      } else {
+        if (reduction <= 0) reductionMsg.textContent = `No reduction. You increased or matched previous month by ${Math.abs(reduction).toFixed(2)}%.`;
+        else reductionMsg.textContent = `You reduced CO₂ by ${reduction.toFixed(2)}%. Points awarded.`;
+      }
+
+      // award points based on reduction
+      let gained = 0;
+      if (state.lastCO2 === 0 && total > 0) {
+        gained = 10;
+      } else if (reduction > 15) gained = 50;
+      else if (reduction >= 5) gained = 25;
+      else if (reduction > 0) gained = 10;
+
+      if (gained > 0) {
+        state.points += gained;
+        localStorage.setItem('points', state.points);
+        // animate points
+        animateValue(pointsEl, Number(pointsEl.textContent) || 0, state.points, 800);
+        sidePointsEl.textContent = state.points;
+      }
+
+      // update lastCO2 and date & streak
+      const today = new Date().toISOString().slice(0,10);
+      if (state.lastInputDate) {
+        const prev = new Date(state.lastInputDate);
+        const cur = new Date(today);
+        const diffDays = Math.floor((cur - prev) / (1000*60*60*24));
+        if (diffDays === 1) state.streak += 1;
+        else if (diffDays > 1) state.streak = 1;
+      } else {
+        state.streak = 1;
+      }
+      state.lastInputDate = today;
+      localStorage.setItem('lastInputDate', state.lastInputDate);
+      localStorage.setItem('streak', state.streak);
+      streakEl.textContent = state.streak + ' days';
+
+      // save lastCO2
+      state.lastCO2 = total;
+      localStorage.setItem('lastCO2', state.lastCO2);
+
+      // update dashboard visuals
+      document.getElementById('last-month').textContent = total.toFixed(2) + ' kg CO₂';
+      animateValue(thisMonthEl, Number(thisMonthEl.textContent) || 0, total, 800);
+
+      // update chart
+      updateChart(values.map(v => Number(v.toFixed(2))));
+      // update suggestions
+      renderSuggestions({ electricity, carKm, bikeKm, trainKm, flightKm, shoppingSpend });
+
+      // update leaderboard (dummy)
+      state.leaderboard.push({ name: 'You', points: state.points });
+      state.leaderboard.sort((a,b)=>b.points-a.points);
+      state.leaderboard = state.leaderboard.slice(0,6);
+      renderLeaderboard();
+      renderBadges();
+    });
+
+    /* -------------- Suggestions Logic -------------- */
+    function renderSuggestions(input) {
+      const grid = suggestionsGrid;
+      grid.innerHTML = '';
+      const rules = [];
+
+      if (!input || Object.keys(input).length === 0) {
+        // default suggestions
+        rules.push({ title: 'Reduce Electricity', text: 'Switch to LED bulbs, unplug devices, consider rooftop solar.' });
+        rules.push({ title: 'Reduce Travel', text: 'Use public transport, carpool, or cycle for short trips.' });
+        rules.push({ title: 'Sustainable Shopping', text: 'Choose local, durable and recycled products.' });
+      } else {
+        if (input.electricity > 200) rules.push({ title: 'Electricity > 200', text: 'Switch to LED bulbs, consider solar panels.' });
+        if (input.carKm > 100) rules.push({ title: 'Car Usage High', text: 'Try carpooling or public transport.' });
+        if (input.flightKm > 500) rules.push({ title: 'Frequent Flights', text: 'Reduce flights or choose trains for short routes.' });
+        if (input.shoppingSpend > 5000) rules.push({ title: 'High Shopping Spend', text: 'Select sustainable/local products and reduce waste.' });
+        // fallback
+        if (rules.length === 0) {
+          rules.push({ title: 'Good Job', text: 'You have moderate usage. Keep tracking to reduce further.' });
+        }
+      }
+
+      rules.forEach(r => {
+        const card = document.createElement('div');
+        card.className = 'p-4 card hover:scale-[1.01] transition';
+        card.innerHTML = `<div class="font-semibold text-emerald-600">${r.title}</div><div class="text-sm text-slate-600 mt-2">${r.text}</div>`;
+        grid.appendChild(card);
+      });
+    }
+
+    /* -------------- Leaderboard, Badges -------------- */
+    function renderLeaderboard() {
+      leaderboardEl.innerHTML = '';
+      state.leaderboard.forEach((u, i) => {
+        const li = document.createElement('li');
+        li.textContent = `${i+1}. ${u.name} - ${u.points} pts`;
+        leaderboardEl.appendChild(li);
+      });
+    }
+
+    function renderBadges() {
+      const badgesEl = document.getElementById('badges');
+      badgesEl.innerHTML = '';
+      // Beginner always
+      badgesEl.insertAdjacentHTML('beforeend', `<span class="inline-block px-2 py-1 text-xs bg-slate-100 rounded mr-1">Beginner</span>`);
+      if (state.points >= 100) badgesEl.insertAdjacentHTML('beforeend', `<span class="inline-block px-2 py-1 text-xs bg-emerald-100 rounded mr-1 badge-glow">Eco Warrior</span>`);
+      if (state.points >= 250) badgesEl.insertAdjacentHTML('beforeend', `<span class="inline-block px-2 py-1 text-xs bg-amber-100 rounded mr-1 badge-glow">Climate Hero</span>`);
+    }
+
+    /* -------------- Scan Product (demo) -------------- */
+    document.getElementById('barcode-btn').addEventListener('click', () => {
+      const code = document.getElementById('barcode-input').value.trim().toUpperCase();
+      lookupProduct(code);
+    });
+    document.getElementById('file-input').addEventListener('change', (e) => {
+      // demo: pretend we scanned and return P1001
+      if (e.target.files && e.target.files.length) {
+        lookupProduct('P1001');
+      }
+    });
+
+    function lookupProduct(code) {
+      const sr = document.getElementById('scan-result');
+      if (!code) {
+        alert('Enter a product code (e.g., P1001) or upload an image.');
+        return;
+      }
+      const prod = state.productDB[code];
+      if (!prod) {
+        alert('Product not found in demo DB. Try P1001, P2001, or P3001.');
+        return;
+      }
+      document.getElementById('scan-product-name').textContent = prod.name;
+      document.getElementById('scan-product-co2').textContent = prod.co2 + ' kg CO₂ (estimated)';
+      document.getElementById('scan-product-desc').textContent = prod.desc;
+      sr.classList.remove('hidden');
+    }
+
+    document.getElementById('contact-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById('contact-name').value.trim();
+  const email = document.getElementById('contact-email').value.trim();
+  const message = document.getElementById('contact-message').value.trim();
+
+  if (!name || !email || !message) {
+    return alert('Please fill all fields.');
+  }
+
+  // Format message for WhatsApp
+  const whatsappMessage = `Name: ${name}%0AEmail: ${email}%0AMessage: ${message}`;
+  const phoneNumber = '918467063125'; // country code +91
+  const whatsappURL = `https://wa.me/${phoneNumber}?text=${whatsappMessage}`;
+
+  // Open WhatsApp chat in new tab
+  window.open(whatsappURL, '_blank');
+
+  // Reset form
+  e.target.reset();
+});
+
+
+    /* -------------- Initialize app on page load -------------- */
+    document.addEventListener('DOMContentLoaded', () => {
+      renderUI();
+      showSection('dashboard');
+
+      // make nav visible if logged in
+      if (state.loggedIn) document.getElementById('nav').classList.remove('hidden');
+
+      // simple dark toggle behaviour (just a visual toggle)
+      const darkToggle = document.getElementById('dark-toggle');
+      if (darkToggle) {
+        darkToggle.addEventListener('click', () => {
+          document.documentElement.classList.toggle('dark');
+          document.body.classList.toggle('bg-slate-900');
+        });
+      }
+    });
+  </script>
+</body>
+</html>

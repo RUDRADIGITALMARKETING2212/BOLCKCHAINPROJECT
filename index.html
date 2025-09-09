@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌟 PROJET| Anand Shukla</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      background: #000;
+    }
+
+    /* Video Background */
+    #bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      filter: brightness(0.6);
+    }
+
+    .container {
+      width: 380px;
+      padding: 40px 30px;
+      background: rgba(255, 234, 7, 0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+      text-align: center;
+      color: #fff;
+      transform: perspective(800px) rotateY(10deg);
+      transition: transform 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    .container:hover {
+      transform: perspective(800px) rotateY(0deg);
+    }
+
+    h1 {
+      font-size: 26px;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+      text-shadow: 0 0 15px #00ffe5;
+    }
+
+    .input-box {
+      position: relative;
+      margin: 20px 0;
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 15px 45px 15px 15px;
+      border: none;
+      outline: none;
+      border-radius: 10px;
+      font-size: 15px;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.2);
+      transition: 0.3s ease;
+    }
+
+    .input-box input:focus {
+      box-shadow: 0 0 10px #00ffe5, 0 0 20px #00ffe5;
+    }
+
+    .input-box label {
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: #fff;
+      pointer-events: none;
+      transition: 0.3s;
+    }
+
+    .input-box input:focus ~ label,
+    .input-box input:valid ~ label {
+      top: -8px;
+      font-size: 12px;
+      color: #00ffe5;
+    }
+
+    .input-box .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 18px;
+      color: #fff;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      background: #00ffe5;
+      color: #000;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 0 15px #00ffe5;
+    }
+
+    button:hover {
+      background: #00bfae;
+      box-shadow: 0 0 25px #00ffe5, 0 0 40px #00ffe5;
+      transform: scale(1.05);
+    }
+
+    .error {
+      color: #ff6b6b;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    /* Floating AI Icon */
+    .ai-wrapper {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+      text-align: center;
+      z-index: 1000;
+      cursor: pointer;
+    }
+
+    #aiIcon {
+      width: 60px;
+      height: 60px;
+      animation: float 3s ease-in-out infinite;
+      transition: transform 0.3s ease;
+    }
+
+    #aiIcon:hover {
+      transform: scale(1.2);
+    }
+
+    .ai-label {
+      color: #00ffe5;
+      font-weight: bold;
+      margin-top: 5px;
+      text-shadow: 0 0 5px #00ffe5;
+      font-size: 14px;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @media screen and (max-width: 450px) {
+      .container {
+        width: 90%;
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Video Background -->
+  <video autoplay muted loop playsinline id="bgVideo">
+    <source src="istockphoto-2200646902-640_adpp_is.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Login Container -->
+  <div class="container">
+    <h1>🌟 Welcome Back</h1>
+    <form id="loginForm">
+      <div class="input-box">
+        <input type="text" id="name" required />
+        <label for="name">Full Name</label>
+      </div>
+      <div class="input-box">
+        <input type="email" id="email" required />
+        <label for="email">Email</label>
+      </div>
+      <div class="input-box">
+        <input type="password" id="password" required />
+        <label for="password">Password</label>
+        <span class="toggle-password" onclick="togglePassword()">👁️</span>
+      </div>
+      <p class="error" id="errorMsg">Please enter valid credentials!</p>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <!-- Floating AI Icon with Label -->
+  <div class="ai-wrapper" id="aiWrapper">
+    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712123.png" id="aiIcon" alt="AI Icon" />
+
+    <div class="ai-label">AI Assistant </div>
+    <h7 style="color: #ff6b6b;">FOR YOUR HELP PLEASE CLICK ON IT AND TALK WITH YOUR AI ASSISTANT</h7>
+    <BR>
+    <H8 style="color: #00ffe5;">MADE BY UNIQUE Creators(ANAND SHUKLA)</H8>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById("loginForm");
+    const errorMsg = document.getElementById("errorMsg");
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const aiWrapper = document.getElementById("aiWrapper");
+
+    loginForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (emailInput.value && passwordInput.value && nameInput.value) {
+        localStorage.setItem("userName", nameInput.value);
+        localStorage.setItem("userEmail", emailInput.value);
+        window.location.href = "main.html"; // Redirect to main page
+      } else {
+        errorMsg.style.display = "block";
+      }
+    });
+
+    function togglePassword() {
+      passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+    }
+
+    aiWrapper.addEventListener("click", () => {
+      window.location.href = "ai.html";
+    });
+  </script>
+
+</body>
+</html>
